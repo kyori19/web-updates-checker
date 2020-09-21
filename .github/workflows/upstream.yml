@@ -1,0 +1,36 @@
+name: Follow upstream
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    if: github.repository != 'kyori19/web-updates-checker'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - name: Pull updates
+        run: |
+          sudo apt-get install -y expect
+          expect -c "
+          set timeout -1
+          spawn npx git-upstream-template https://github.com/kyori19/web-updates-checker.git
+          expect \"selection:\"
+          send \"a\"
+          sleep 1
+          send \"\n\"
+          sleep 5
+          interact
+          "
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
