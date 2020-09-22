@@ -1,0 +1,26 @@
+name: Process issues
+
+on:
+  issues:
+    type: opened
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    if: github.repository != 'kyori19/web-updates-checker'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - run: npm ci
+
+      - run: npm run process-issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY_OWNER: ${{ github.event.repository.owner.login }}
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
