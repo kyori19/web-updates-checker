@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "process-issue": "ts-node -r dotenv/config --files process-issue.ts",
+    "process-pull-requests": "ts-node -r dotenv/config --files process-pull-requests.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -1,0 +1,29 @@
+name: Process pull requests
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    if: github.repository != 'kyori19/web-updates-checker'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - run: |
+          echo "::set-env name=REPOSITORY_OWNER::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')"
+          echo "::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')"
+
+      - run: npm ci
+
+      - run: npm run process-pull-requests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
