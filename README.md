@@ -13,7 +13,9 @@ Before using this, please read [Usage](#usage) below.
 
 ### 1. Click "Use this template" above
 
-You should make the repository private, otherwise users other than you can use your repository to check updates.
+You should make the repository private, otherwise users other than you can use your repository to check updates.  
+Additionally, you should unwatch the created repository.
+If you keep it watched, you will receive emails per 15 minutes.
 
 ### 2. Create new issue
 
