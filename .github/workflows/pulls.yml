@@ -1,11 +1,11 @@
-name: Process pull requests
+name: Cleanup pull requests
 
 on:
-  schedule:
-    - cron: '*/15 * * * *'
+  pull_request:
+    types: [closed]
 
 jobs:
-  pull:
+  cleanup:
     runs-on: ubuntu-latest
     if: github.repository != 'kyori19/web-updates-checker'
 
@@ -14,16 +14,4 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '12'
-
-      - run: |
-          echo "REPOSITORY_OWNER=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $1}')" >> $GITHUB_ENV
-          echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')" >> $GITHUB_ENV
-
-      - run: npm ci
-
-      - run: npm run process-pull-requests
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: git push origin :${{ github.event.pull_request.head.ref }}
